@@ -1,0 +1,45 @@
+# playbooks/roles/phpmyadmin/tasks/main.yml
+---
+- name: Download phpMyAdmin
+  get_url:
+    url: "{{ phpmyadmin_download_url }}"
+    dest: "/tmp/phpmyadmin.tar.gz"
+    mode: '0644'
+
+- name: Create installation directory
+  file:
+    path: "{{ phpmyadmin_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Extract phpMyAdmin
+  unarchive:
+    src: "/tmp/phpmyadmin.tar.gz"
+    dest: "{{ phpmyadmin_install_dir }}"
+    extra_opts: ["--strip-components=1"]
+    remote_src: yes
+
+# - name: Create config directory
+#   file:
+#     path: "{{ phpmyadmin_config_dir }}"
+#     state: directory
+#     mode: '0755'
+
+- name: Template config file
+  template:
+    src: config.inc.php.j2
+    dest: "{{ phpmyadmin_config_dir }}/config.inc.php"
+    mode: '0644'
+
+- name: Copy Nginx configuration for phpMyAdmin
+  template:
+    src: phpmyadmin.conf.j2
+    dest: /etc/nginx/sites-available/phpmyadmin.conf
+  notify: Reload Nginx
+
+- name: Enable phpMyAdmin site
+  file:
+    src: /etc/nginx/sites-available/phpmyadmin.conf
+    dest: /etc/nginx/sites-enabled/phpmyadmin.conf
+    state: link
+  notify: Reload Nginx

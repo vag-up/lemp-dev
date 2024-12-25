@@ -1,0 +1,38 @@
+- hosts: all
+  vars:
+    # server timezone
+    timesync_timezone: Asia/Tokyo
+    timesync_ntp_hosts:
+      - ntp.nict.jp
+
+    # PHP
+    php_date_timezone: Asia/Tokyo
+    php_mbstring_language: Japanese
+
+    # MariaDB
+    mariadb_version: 11.7
+    mariadb_root_password: "root"
+
+    # sample database for Japanese testing
+    sample_db_host: 'localhost'
+    sample_db_name: 'my_database'
+    sample_db_user: 'my_user'
+    sample_db_password: 'my_password'
+    mariadb_databases:
+      - name: '{{ sample_db_name }}'
+        encoding: utf8mb4
+        #collation: utf8_general_ci
+        collation: utf8mb4_general_ci
+        init_script: files/init.sql
+    mariadb_users:
+      - name: '{{ sample_db_user}}'
+        password: '{{ sample_db_password }}'
+        priv: '{{ sample_db_name }}.*:ALL'
+        host: '{{ sample_db_host}}'
+
+  roles:
+    - stuvusit.systemd-timesyncd
+    - common
+    - web
+    - mariadb
+    - phpmyadmin

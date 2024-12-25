@@ -1,0 +1,150 @@
+---
+# tasks file for web
+
+- name: Install Latest Nginx
+  apt:
+    name: nginx
+    state: present
+    force: yes
+    update_cache: yes
+  tags: install_nginx
+
+- name: Remove default nginx vhost config file.
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/nginx/sites-available/default
+    - /etc/nginx/sites-enabled/default
+  notify: Restart Nginx
+
+- name: Create Nginx virtual host
+  template:
+    src: vhost.j2
+    dest: /etc/nginx/sites-available/{{ domain_name }}.conf
+  notify: Reload Nginx
+
+- name: Enable Newly added site
+  file:
+    src: "/etc/nginx/sites-available/{{domain_name}}.conf"
+    dest: "/etc/nginx/sites-enabled/{{domain_name}}.conf"
+    state: link
+  notify: Reload Nginx
+
+- name: Ensure nginx is started and enabled to start at boot.
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+# PHP Related tasks goes here
+- name: Install PHP {{php_version}} PPA Repository
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+  tags:
+    - php
+
+- name: Install PHP{{php_version}}
+  apt:
+    name: php{{php_version}}
+    state: latest
+
+- name: Mask Apache2 service(If PHP installed with Apache2)
+  apt:
+    name: apache2
+    state: absent
+
+- name: Instal PHP and other php dependencies.
+  apt:
+    name:
+      [
+        "php{{php_version}}-dev",
+        "php{{php_version}}-curl",
+        "php{{php_version}}-fpm",
+        "php{{php_version}}-gd",
+        "php{{php_version}}-imap",
+        "php{{php_version}}-bcmath",
+        "php{{php_version}}-tokenizer",
+        "php{{php_version}}-xml",
+        "php{{php_version}}-mbstring",
+        "php{{php_version}}-pdo",
+        "php{{php_version}}-mysql",
+        "php{{php_version}}-xdebug",  # for debugging
+        "composer",
+      ]
+    state: latest
+    force: yes
+    update_cache: yes
+
+- name: Copy php.ini file
+  template:
+    src: php.ini.j2
+    dest: "/etc/php/{{php_version}}/fpm/php.ini"
+
+- name: Create user specific conf file for php-fpm
+  copy:
+    remote_src: true
+    src: "/etc/php/{{php_version}}/fpm/pool.d/www.conf"
+    dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
+  become: true
+
+- name: Set pool name
+  lineinfile:
+    dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
+    regexp: "^\\[www]"
+    line: "[{{deploy_user}}]"
+  become: true
+
+- name: Set PHP user
+  lineinfile:
+    dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
+    regexp: "^user"
+    line: "user = {{deploy_user}}"
+    state: present
+  become: true
+
+- name: Set PHP group
+  lineinfile:
+    dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
+    regexp: "^group"
+    line: "group = {{deploy_user}}"
+    state: present
+  become: true
+
+- name: listen socket
+  lineinfile:
+    dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
+    regexp: "^listen \\="
+    line: "listen = /run/php/php{{php_version}}-fpm-{{deploy_user}}.sock"
+    state: present
+  notify: Restart php-fpm
+  become: true
+
+- name: Give User a sudo privilege  to non sudo users.
+  template:
+    src: privilege.j2
+    dest: /etc/sudoers.d/{{deploy_user}}
+    validate: "visudo -cf %s"
+    mode: 0440
+    owner: root
+    group: root
+  tags: sudo_privilege
+
+# - name: Create web-root directory
+#   file:
+#     path: /home/{{deploy_user}}/app/{{ domain_name }}
+#     state: directory
+#   become: yes
+#   #become_user: "{{ deploy_user }}"
+
+- name: Upload sample script
+  template:
+    src: index2.php.j2
+    dest: /var/www/remote/app/index2.php
+  notify:
+    - Restart php-fpm
+    - Restart Nginx
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes
