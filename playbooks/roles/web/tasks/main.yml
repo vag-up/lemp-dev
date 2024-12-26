@@ -1,6 +1,5 @@
 ---
-# tasks file for web
-
+# Install Nginx
 - name: Install Latest Nginx
   apt:
     name: nginx
@@ -37,7 +36,7 @@
     state: started
     enabled: yes
 
-# PHP Related tasks goes here
+# Install PHP
 - name: Install PHP {{php_version}} PPA Repository
   apt_repository:
     repo: 'ppa:ondrej/php'
@@ -80,70 +79,15 @@
   template:
     src: php.ini.j2
     dest: "/etc/php/{{php_version}}/fpm/php.ini"
-
-# - name: Create user specific conf file for php-fpm
-#   copy:
-#     remote_src: true
-#     src: "/etc/php/{{php_version}}/fpm/pool.d/www.conf"
-#     dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
-#   become: true
-
-# - name: Set pool name
-#   lineinfile:
-#     dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
-#     regexp: "^\\[www]"
-#     line: "[{{deploy_user}}]"
-#   become: true
-
-# - name: Set PHP user
-#   lineinfile:
-#     dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
-#     regexp: "^user"
-#     line: "user = {{deploy_user}}"
-#     state: present
-#   become: true
-
-# - name: Set PHP group
-#   lineinfile:
-#     dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
-#     regexp: "^group"
-#     line: "group = {{deploy_user}}"
-#     state: present
-#   become: true
-
-# - name: listen socket
-#   lineinfile:
-#     dest: "/etc/php/{{php_version}}/fpm/pool.d/{{deploy_user}}.conf"
-#     regexp: "^listen \\="
-#     line: "listen = /run/php/php{{php_version}}-fpm-{{deploy_user}}.sock"
-#     state: present
-#   notify: Restart php-fpm
-#   become: true
-
-# - name: Give User a sudo privilege  to non sudo users.
-#   template:
-#     src: privilege.j2
-#     dest: /etc/sudoers.d/{{deploy_user}}
-#     validate: "visudo -cf %s"
-#     mode: 0440
-#     owner: root
-#     group: root
-#   tags: sudo_privilege
-
-# - name: Create web-root directory
-#   file:
-#     path: /home/{{deploy_user}}/app/{{ domain_name }}
-#     state: directory
-#   become: yes
-#   #become_user: "{{ deploy_user }}"
+  notify: Restart php-fpm
 
 - name: Upload sample script
   template:
     src: index2.php.j2
     dest: /var/www/remote/app/index2.php
-  notify:
-    - Restart php-fpm
-    - Restart Nginx
+  #notify:
+  #  - Restart php-fpm
+  #  - Restart Nginx
 
 - name: Remove dependencies that are no longer required
   apt:
