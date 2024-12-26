@@ -9,13 +9,14 @@ LEMP環境は最新のバージョンがインストールされます。
 - Nginx 1.18
 - MariaDB 11.7
 
-![lemp-dev](https://github.com/user-attachments/assets/f20ecdfc-579b-4f58-9b93-42be632340b7)
+![lemp-dev](https://github.com/user-attachments/assets/faf7eb41-6778-4a94-a624-e312c1291f31)
 
 ## インストールに必要な環境
 
 - Windows 11
 - Visual Studio Code
-- Vagrant実行環境
+- Vagrant
+- VirtualBox
 
 ## LEMP環境の構築
 
@@ -71,7 +72,8 @@ http://192.168.33.10:8080
 
 ## デバッグ
 
-1. VSCodeの**リモートエクスプローラ**から**トンネル機能**を使用して仮想サーバにSSH接続します。開くフォルダパスは`/var/www/remote`です。
+1. VSCodeの**リモートエクスプローラー**から**リモート(トンネル/SSH)**を使用して仮想サーバにSSH接続します。開くフォルダパスは`/var/www/remote`です。  
+接続が完了すると自動的に****がインストールされます。
 2. **PHP Debug**のインストールを提案されるので、ボタンを押して仮想サーバにインストールします。
 3. VSCodeの**実行とデバッグ**を選択します。メニューから**Listen for Xdebug**を実行するとデバッガが実行されます。
 4. PHPのソースコードにブレークポイントを設定すると、Webブラウザからのアクセスに反応します。
