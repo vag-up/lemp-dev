@@ -9,6 +9,8 @@ LEMP環境は最新のバージョンがインストールされます。
 - Nginx 1.18
 - MariaDB 11.7
 
+![lemp-dev](https://github.com/user-attachments/assets/f20ecdfc-579b-4f58-9b93-42be632340b7)
+
 ## インストールに必要な環境
 
 - Windows 11
