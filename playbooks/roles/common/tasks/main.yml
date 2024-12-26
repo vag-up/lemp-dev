@@ -25,14 +25,14 @@
     update_cache: yes
   tags: common_install_packages
 
-- name: Ensure group "deployer" exists
-  group:
-    name: deployer
-    state: present
+# - name: Ensure group "deployer" exists
+#   group:
+#     name: deployer
+#     state: present
 
-- name: Add the user 'deployer' with a bash shell, appending the group 'deployer' to the user's groups
-  user:
-    name: deployer
-    shell: /bin/bash
-    group: "deployer"
-    append: yes
+# - name: Add the user 'deployer' with a bash shell, appending the group 'deployer' to the user's groups
+#   user:
+#     name: deployer
+#     shell: /bin/bash
+#     group: "deployer"
+#     append: yes

@@ -25,7 +25,7 @@ Vagrant.configure(2) do |config|
   #config.vm.network "public_network", ip: "192.168.1.50"
 
   # Synced folder
-  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  #config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   config.vm.synced_folder "./remote", "/var/www/remote", type: "virtualbox"
 
   # SSH configuration for the VM
