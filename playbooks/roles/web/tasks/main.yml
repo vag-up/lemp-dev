@@ -53,7 +53,7 @@
     name: apache2
     state: absent
 
-- name: Instal PHP and other php dependencies.
+- name: Install PHP and other php dependencies.
   apt:
     name:
       [
