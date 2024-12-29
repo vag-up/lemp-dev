@@ -39,7 +39,7 @@
 
 - name: Enable phpMyAdmin site
   file:
-    src: /etc/nginx/sites-available/phpmyadmin.conf
+    src: ../sites-available/phpmyadmin.conf
     dest: /etc/nginx/sites-enabled/phpmyadmin.conf
     state: link
   notify: Reload Nginx

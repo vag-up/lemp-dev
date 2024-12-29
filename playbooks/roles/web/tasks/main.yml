@@ -25,7 +25,7 @@
 
 - name: Enable Newly added site
   file:
-    src: "/etc/nginx/sites-available/{{domain_name}}.conf"
+    src: "../sites-available/{{domain_name}}.conf"
     dest: "/etc/nginx/sites-enabled/{{domain_name}}.conf"
     state: link
   notify: Reload Nginx
