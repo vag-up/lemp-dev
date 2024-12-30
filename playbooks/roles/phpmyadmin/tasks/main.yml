@@ -19,12 +19,6 @@
     extra_opts: ["--strip-components=1"]
     remote_src: yes
 
-# - name: Create config directory
-#   file:
-#     path: "{{ phpmyadmin_config_dir }}"
-#     state: directory
-#     mode: '0755'
-
 - name: Template config file
   template:
     src: config.inc.php.j2
