@@ -33,6 +33,8 @@
   roles:
     - stuvusit.systemd-timesyncd
     - common
-    - web
+    - php
+    - nginx
+    #- web
     - mariadb
     - phpmyadmin

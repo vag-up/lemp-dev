@@ -1,0 +1,49 @@
+---
+# Install PHP
+- name: Install PHP {{php_version}} PPA Repository
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+  tags:
+    - php
+
+- name: Install PHP{{php_version}}
+  apt:
+    name: php{{php_version}}
+    state: latest
+
+- name: Install PHP and other php dependencies.
+  apt:
+    name:
+      [
+        "php{{php_version}}-dev",
+        "php{{php_version}}-curl",
+        "php{{php_version}}-fpm",
+        "php{{php_version}}-gd",
+        "php{{php_version}}-imap",
+        "php{{php_version}}-bcmath",
+        "php{{php_version}}-tokenizer",
+        "php{{php_version}}-xml",
+        "php{{php_version}}-mbstring",
+        "php{{php_version}}-pdo",
+        "php{{php_version}}-mysql",
+        "php{{php_version}}-xdebug",  # for debugging
+        "composer",
+      ]
+    state: latest
+    force: yes
+    update_cache: yes
+
+- name: Copy php.ini file
+  template:
+    src: php.ini.j2
+    dest: "/etc/php/{{php_version}}/fpm/php.ini"
+  notify: Restart php-fpm
+
+- name: Upload sample script
+  template:
+    src: index2.php.j2
+    dest: /var/www/remote/app/index2.php
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes
