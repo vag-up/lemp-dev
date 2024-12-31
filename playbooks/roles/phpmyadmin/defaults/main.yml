@@ -1,0 +1,4 @@
+phpmyadmin_version: 5.2.1
+phpmyadmin_download_url: "https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.tar.gz"
+phpmyadmin_install_dir: /usr/share/phpmyadmin
+phpmyadmin_config_dir: /usr/share/phpmyadmin

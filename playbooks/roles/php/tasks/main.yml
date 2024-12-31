@@ -11,6 +11,11 @@
     name: php{{php_version}}
     state: latest
 
+- name: Mask Apache2 service(If PHP installed with Apache2)
+  apt:
+    name: apache2
+    state: absent
+
 - name: Install PHP and other php dependencies.
   apt:
     name:
@@ -43,7 +48,3 @@
   template:
     src: index2.php.j2
     dest: /var/www/remote/app/index2.php
-
-- name: Remove dependencies that are no longer required
-  apt:
-    autoremove: yes

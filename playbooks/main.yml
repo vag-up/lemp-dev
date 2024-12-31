@@ -6,6 +6,7 @@
       - ntp.nict.jp
 
     # PHP
+    php_version: 8.4
     php_date_timezone: Asia/Tokyo
     php_mbstring_language: Japanese
 
@@ -13,7 +14,7 @@
     mariadb_version: 11.7
     mariadb_root_password: "root"
 
-    # sample database for Japanese testing
+    # sample database for Japanese
     sample_db_host: 'localhost'
     sample_db_name: 'my_database'
     sample_db_user: 'my_user'
@@ -21,7 +22,6 @@
     mariadb_databases:
       - name: '{{ sample_db_name }}'
         encoding: utf8mb4
-        #collation: utf8_general_ci
         collation: utf8mb4_general_ci
         init_script: files/init.sql
     mariadb_users:
