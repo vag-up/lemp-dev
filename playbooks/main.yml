@@ -35,6 +35,5 @@
     - common
     - php
     - nginx
-    #- web
     - mariadb
     - phpmyadmin
