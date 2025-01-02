@@ -21,9 +21,6 @@
   register: db_creation
   tags: mariadb
 
-# Below, the databases are initialised, but only when the database was created
-# in the previous step. This ensures idempotence.
-
 - name: Copy database init scripts
   copy:
     src: "{{ item.item.init_script }}"

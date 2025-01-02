@@ -11,12 +11,7 @@ mariadb_apt_keyid: '0xF1656F24C74CD1D8'
 mariadb_packages:
   - mariadb-server
   - mariadb-client
-  #- libmysqlclient-dev
   - python3-pip
-  - python3-mysqldb # for setting up password
+  - python3-mysqldb
 
 mariadb_socket: /var/run/mysqld/mysqld.sock
-
-mariadb_config_network: /etc/mysql/conf.d/network.cnf
-mariadb_config_server: /etc/mysql/conf.d/server.cnf
-mariadb_config_custom: /etc/mysql/conf.d/custom.cnf
