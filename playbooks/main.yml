@@ -1,6 +1,9 @@
 - hosts: all
   vars:
-    # server timezone
+    # Server domain
+    #domain_name: example.com # if you want to use a domain name
+
+    # Server timezone
     timesync_timezone: Asia/Tokyo
     timesync_ntp_hosts:
       - ntp.nict.jp
@@ -14,7 +17,7 @@
     mariadb_version: 11.7
     mariadb_root_password: "root"
 
-    # sample database for Japanese
+    # Sample database for Japanese
     sample_db_host: 'localhost'
     sample_db_name: 'my_database'
     sample_db_user: 'my_user'
