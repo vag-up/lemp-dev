@@ -1,6 +1,11 @@
 server {
     listen 8080;
+    #server_name _;
+    {% if domain_name == "default" %}
     server_name _;
+    {% else %}
+    server_name {{ domain_name }};
+    {% endif %}
 
     root /usr/share/phpmyadmin;
     index index.php;
