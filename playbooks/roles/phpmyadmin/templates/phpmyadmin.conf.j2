@@ -1,21 +1,21 @@
 server {
-    listen 8080;
+  listen 8080;
 {% if domain_name == "default" %}
-    server_name _;
+  server_name _;
 {% else %}
-    server_name {{ domain_name }};
+  server_name {{ domain_name }};
 {% endif %}
 
-    root /usr/share/phpmyadmin;
-    index index.php;
+  root /usr/share/phpmyadmin;
+  index index.php;
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
+  location / {
+    try_files $uri $uri/ =404;
+  }
 
-    location ~ \.php$ {
-        fastcgi_pass unix:/run/php/php{{ php_version }}-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
+  location ~ \.php$ {
+    fastcgi_pass unix:/run/php/php{{ php_version }}-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+  }
 }
