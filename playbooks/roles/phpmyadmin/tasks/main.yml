@@ -30,7 +30,7 @@
 
 - name: Creating a virtual host
   template:
-    src: apache-phpmyadmin.conf.j2
+    src: phpmyadmin-apache.conf.j2
     dest: /etc/apache2/sites-available/phpmyadmin.conf
     mode: '0644'
   notify: Reload Apache
