@@ -28,6 +28,7 @@
         "php{{php_version}}-bcmath",
         "php{{php_version}}-tokenizer",
         "php{{php_version}}-xml",
+        "php{{php_version}}-intl",
         "php{{php_version}}-mbstring",
         "php{{php_version}}-pdo",
         "php{{php_version}}-mysql",
