@@ -31,7 +31,7 @@ Vagrant.configure(2) do |config|
   # SSH configuration for the VM
   config.vm.provision "shell" do |sh|
     # Local SSH public key
-    ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+    ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_ed25519.pub").first.strip
 
     # Copy SSH public key to the VM
     sh.inline = <<-SHELL
