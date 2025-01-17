@@ -1,11 +1,42 @@
 # roles/mariadb/tasks/install.yml
 ---
 
-- name: Install MariaDB keys
-  apt_key:
-    keyserver: "{{ mariadb_apt_keyserver }}"
-    id: "{{ mariadb_apt_keyid }}"
-    state: present
+- name: Add MariaDB GPG key using multiple methods
+  block:
+    - name: Try adding MariaDB key from keyserver (Method 1)
+      command: timeout 30s apt-key adv --keyserver {{ mariadb_apt_keyserver }} --recv-keys {{ mariadb_apt_keyid }}
+      register: key_from_server
+      ignore_errors: true
+
+    - name: Try adding MariaDB key from URL (Method 2)
+      apt_key:
+        url: "https://mariadb.org/mariadb_release_signing_key.asc"
+        state: present
+      when: key_from_server is failed
+      register: key_from_url
+      ignore_errors: true
+
+    - name: Download and add MariaDB key manually (Method 3)
+      block:
+        - name: Download MariaDB key
+          get_url:
+            url: "https://mariadb.org/mariadb_release_signing_key.asc"
+            dest: /tmp/mariadb_key.asc
+            mode: '0644'
+
+        - name: Import MariaDB key
+          shell: cat /tmp/mariadb_key.asc | apt-key add -
+          args:
+            warn: false
+      when:
+        - key_from_server is failed
+        - key_from_url is failed
+
+    - name: Clean up temporary key file
+      file:
+        path: /tmp/mariadb_key.asc
+        state: absent
+      when: key_from_server is failed
 
 - name: Add official MariaDB apt repository
   apt_repository:
