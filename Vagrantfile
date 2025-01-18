@@ -45,6 +45,7 @@ Vagrant.configure(2) do |config|
   # Launch Ansible
   config.vm.provision "ansible_local" do |ansible|
     ansible.become = true
+    ansible.config_file = "ansible.cfg"
     ansible.playbook = "playbooks/main.yml"
     ansible.galaxy_role_file = "playbooks/requirements.yml"
     ansible.galaxy_command = 'ansible-galaxy install -r %{role_file} --force'
