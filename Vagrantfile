@@ -12,8 +12,8 @@ Vagrant.configure(2) do |config|
   end
 
   # VirtualBox image
-  config.vm.box = "ubuntu/jammy64"  # OK
-  config.vm.box_version = "20241002.0.0"
+  config.vm.box = "bento/ubuntu-24.04"
+  config.vm.box_architecture = "amd64" # amd64(Windows), arm64(Mac)
 
   # VM spec configuration
   config.vm.provider "virtualbox" do |vb|
