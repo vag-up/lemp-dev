@@ -9,12 +9,12 @@
       - ntp.nict.jp
 
     # PHP
-    php_version: 8.4
+    php_version: 8.5
     php_date_timezone: Asia/Tokyo
     php_mbstring_language: Japanese
 
     # MariaDB
-    mariadb_version: 11.7
+    mariadb_version: 11.8
     mariadb_root_password: "root"
 
     # Sample database for Japanese
